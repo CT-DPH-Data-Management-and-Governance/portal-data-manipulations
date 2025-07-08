@@ -5,7 +5,12 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "dataops",
     "dotenv>=0.9.9",
     "polars>=1.31.0",
+    "pydantic-settings>=2.10.1",
     "sodapy>=2.2.0",
 ]
+
+[tool.uv.sources]
+dataops = { git = "https://github.com/CT-DPH-Data-Management-and-Governance/api-data-ops.git" }
