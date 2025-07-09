@@ -56,5 +56,25 @@ def extend_acs(data: pl.DataFrame | pl.LazyFrame, years: list):
     # TODO only expand active rows
     # TODO recreate url
     expanded = base.join(years_df, how="cross")
+    new = expanded.filter(
+        (pl.col("year").cast(pl.Int64).ne(pl.col("new_year"))) & (pl.col("active").eq("1"))
+        ).drop("row_id").with_row_index("row_id", offset=snapshot["max_id"]+1).with_columns(
+            pl.concat_str(
+                [
+                    pl.col("begin"),
+                    pl.col("new_year"),
+                    pl.col("end")
+                ]
+            ).alias("endpoint"),
+            pl.col("new_year").alias("year"),
+            #pl.col("date_added") TODO set to now
+            pl.lit("").alias("date_last_pulled")
+        ).drop(
+            [
+                "begin",
+                "new_year",
+                "end"
+            ]
+        )
 
     return expanded
